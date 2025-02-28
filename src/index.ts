@@ -27,18 +27,17 @@ export default class MyWorker extends WorkerEntrypoint<Env> {
    * @return {SummaryResponse} object containing both summary and original text
    */
   async summarizeText(text: string): Promise<SummaryResponse> {
-    const streamResult = await streamText({
-      model: google("models/gemini-2.0-flash-exp"),
+    const model = google("models/gemini-2.0-flash-exp");
+    const response = await generateText({
+      model,
       prompt: `Please summarize the following text concisely while maintaining key points:
 
 ${text}`,
       temperature: 0.7,
     });
 
-    const result = await streamResult.toString();
-
     return {
-      summary: result,
+      summary: response.text,
       originalText: text
     };
   }
