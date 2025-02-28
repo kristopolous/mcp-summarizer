@@ -1,14 +1,20 @@
 {
   "name": "mcp-summarizer-server",
   "version": "0.0.0",
-  "private": true,
   "scripts": {
     "deploy": "workers-mcp docgen src/index.ts && wrangler deploy",
+    "build": "wrangler build",
     "dev": "wrangler dev",
     "start": "wrangler dev",
     "test": "vitest",
     "cf-typegen": "wrangler types"
   },
+  "bin": {
+    "mcp-summarizer-server": "dist/index.js"
+  },
+  "files": [
+    "dist"
+  ],
   "maintainers": [
     {
       "name": "qxm726",
