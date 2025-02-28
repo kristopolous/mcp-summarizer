@@ -2,13 +2,16 @@ import { WorkerEntrypoint } from 'cloudflare:workers'
 import { ProxyToSelf } from 'workers-mcp'
 
 import { generateText, streamText } from "ai"
+import { createGoogleGenerativeAI } from '@ai-sdk/google';
 
-import { createGoogleGenerativeAI, google, GoogleGenerativeAIProviderSettings } from '@ai-sdk/google';
+interface Env {
+  GOOGLE_GENERATIVE_AI_API_KEY: string;
+  SHARED_SECRET: string;
+}
 
-
-interface SummaryResponse {
+interface ContentResponse {
   summary: string;
-  originalText: string;
+  type: string;
 }
 
 export default class MyWorker extends WorkerEntrypoint<Env> {
@@ -18,28 +21,29 @@ export default class MyWorker extends WorkerEntrypoint<Env> {
    * @return {string} the contents of our greeting.
    */
   sayHello(name: string) {
-    return `Hello from an MCP Worker, ${name}!`
+    return `Hello from an MCP Worker2, ${name}!`
   }
 
   /**
-   * Summarize the given text and return both summary and original text
-   * @param text {string} the text to be summarized
-   * @return {SummaryResponse} object containing both summary and original text
+   * summarize content for the given text
+   * @param text {string} the text to be summarize
+   * @return {string}  content summary
    */
-  async summarizeText(text: string): Promise<SummaryResponse> {
-    const model = google("models/gemini-2.0-flash-exp");
-    const response = await generateText({
-      model,
-      prompt: `Please summarize the following text concisely while maintaining key points:
-
-${text}`,
-      temperature: 0.7,
+  async summarizeText(text: string): Promise<string> {
+    const google = createGoogleGenerativeAI({
+      apiKey: this.env.GOOGLE_GENERATIVE_AI_API_KEY
     });
 
-    return {
-      summary: response.text,
-      originalText: text
-    };
+    const model = google("models/gemini-2.0-flash-exp");
+
+    const poeticPrompt = `请总结以下内容：${text}`;
+    
+    const response = await generateText({
+      model,
+      prompt: poeticPrompt
+    });
+
+    return response.text
   }
 
   /**
