@@ -17,6 +17,8 @@
     "wrangler": "^3.111.0"
   },
   "dependencies": {
+    "@ai-sdk/google": "^1.1.17",
+    "ai": "^4.1.46",
     "workers-mcp": "^0.0.13"
   }
 }

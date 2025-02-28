@@ -1,6 +1,11 @@
 import { WorkerEntrypoint } from 'cloudflare:workers'
 import { ProxyToSelf } from 'workers-mcp'
 
+import { generateText, streamText } from "ai"
+
+import { createGoogleGenerativeAI, google, GoogleGenerativeAIProviderSettings } from '@ai-sdk/google';
+
+
 interface SummaryResponse {
   summary: string;
   originalText: string;
@@ -21,12 +26,19 @@ export default class MyWorker extends WorkerEntrypoint<Env> {
    * @param text {string} the text to be summarized
    * @return {SummaryResponse} object containing both summary and original text
    */
-  summarizeText(text: string): SummaryResponse {
-    // 这里是一个模拟的摘要，实际项目中可以接入真实的摘要服务
-    const mockSummary = `这是"${text.slice(0, 50)}..."的摘要：${text.slice(0, 100)}...`;
-    
+  async summarizeText(text: string): Promise<SummaryResponse> {
+    const streamResult = await streamText({
+      model: google("models/gemini-2.0-flash-exp"),
+      prompt: `Please summarize the following text concisely while maintaining key points:
+
+${text}`,
+      temperature: 0.7,
+    });
+
+    const result = await streamResult.toString();
+
     return {
-      summary: mockSummary,
+      summary: result,
       originalText: text
     };
   }
