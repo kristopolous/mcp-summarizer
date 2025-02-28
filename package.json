@@ -9,6 +9,12 @@
     "test": "vitest",
     "cf-typegen": "wrangler types"
   },
+  "maintainers": [
+    {
+      "name": "qxm726",
+      "email": "qxm726@gmail.com"
+    }
+  ],
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.6.4",
     "@cloudflare/workers-types": "^4.20250224.0",
