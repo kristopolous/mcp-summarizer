@@ -1,0 +1,14 @@
+
+descriminator (mcp/rules etc)
+	connect to all the memory systems
+	to solve:
+		key storage
+		are api keys global?
+
+local storage and sharing might be important.
+	
+	
+storage formatter
+storage layer
+retrieval
+context injection
